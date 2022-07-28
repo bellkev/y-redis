@@ -118,11 +118,12 @@ export class RedisPersistence extends Observable {
    * @param {Object} [opts]
    * @param {Object|null} [opts.redisOpts]
    * @param {Array<Object>|null} [opts.redisClusterOpts]
+   * @param {function(...*): Redis.Redis | Redis.Cluster} [opts.redisFactory]
    */
-  constructor ({ redisOpts = /** @type {any} */ (null), redisClusterOpts = /** @type {any} */ (null) } = {}) {
+  constructor ({ redisOpts = /** @type {any} */ (null), redisClusterOpts = /** @type {any} */ (null), redisFactory = (createRedisInstance) } = {}) {
     super()
-    this.redis = createRedisInstance(redisOpts, redisClusterOpts)
-    this.sub = /** @type {Redis.Redis} */ (createRedisInstance(redisOpts, redisClusterOpts))
+    this.redis = redisFactory(redisOpts, redisClusterOpts)
+    this.sub = /** @type {Redis.Redis} */ (redisFactory(redisOpts, redisClusterOpts))
     /**
      * @type {Map<string,PersistenceDoc>}
      */
